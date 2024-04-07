@@ -22,7 +22,7 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Text(
-            login ?  '  Sign Up' : 'Sign In',
+            login ?  '  Sign Up' : '  Sign In',
             style: const TextStyle(
               color: Colors.black,
               fontStyle: FontStyle.italic,

@@ -1,3 +1,5 @@
+import 'package:campus_cart/ForgetPassword/background.dart';
+import 'package:campus_cart/ForgetPassword/body.dart';
 import 'package:flutter/material.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -10,9 +12,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Forget password Screen'),
-      ),
-    );
+      body: ForgetBody(),
+      );
   }
 }
