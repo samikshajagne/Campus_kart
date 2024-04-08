@@ -1,4 +1,3 @@
-import 'dart:js';
 
 import 'package:campus_cart/LoginScreen/login_screen.dart';
 import 'package:campus_cart/SignupScreen/signup_screen.dart';

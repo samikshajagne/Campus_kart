@@ -9,10 +9,11 @@ class SearchProduct extends StatefulWidget {
 class _SearchProductState extends State<SearchProduct> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title:
+    return Scaffold(
+      appBar: AppBar(title:
     const Text("Search Product Screen",
       style: TextStyle(
-        color: Colors.white,
+        color: Colors.black54,
         fontFamily: 'Signatra',
         fontSize: 35,
       ),

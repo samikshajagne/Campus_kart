@@ -13,7 +13,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(title:
         const Text("Profile",
         style: TextStyle(
-        color: Colors.white,
+        color: Colors.black54,
         fontFamily: 'Signatra',
         fontSize: 35,
     ),
