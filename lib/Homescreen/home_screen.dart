@@ -1,11 +1,15 @@
 
+import 'package:flutter/material.dart';
+
 import '../Widgets/GlobalVariable.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
+  
   @override
   _HomeScreenState createState() => _HomeScreenState();
+}
+
+class StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
