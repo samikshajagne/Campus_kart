@@ -1,10 +1,18 @@
 
+import 'dart:js_interop_unsafe';
+
+import 'package:campus_cart/ImagesSliderScreen/ImageSliderScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
+import 'GlobalVariable.dart';
 
 class ListViewWidget extends StatefulWidget {
   String docId, itemColor, img1, img2, img3, img4, img5,userImg, name , userId, itemModel, postId;
-  String itemPrice, itemdescription, address, userNumber;
+  String itemPrice, itemDescription, address, userNumber;
   DateTime date;
   double lat,lng;
 
@@ -23,7 +31,7 @@ class ListViewWidget extends StatefulWidget {
     required this.itemModel,
     required this.postId,
     required this.itemPrice,
-    required this.itemdescription,
+    required this.itemDescription,
     required this.lat,
     required this.lng,
     required this.address,
@@ -36,54 +44,181 @@ class ListViewWidget extends StatefulWidget {
 
 class _ListViewWidgetState extends State<ListViewWidget> {
 
-  Future<Future> showDialogForUpdateData(selectDoc, oldUserName, oldPhoneNumber, oldItemPrice, oldItemColor , oldItemDescription) async{
+  Future<Future> showDialogForUpdateData(selectDoc, oldUserName, oldPhoneNumber, oldItemPrice, oldItemName, oldItemColor , oldItemDescription) async
+  {
     return showDialog(context: context,
         barrierDismissible: false,
-        builder:(BuildContext context)
+        builder: (BuildContext context)
         {
           return SingleChildScrollView(
-              child: AlertDialog(
-                title: Text('Update Data',style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Bebas',
-                  letterSpacing: 2.0,
+            child: AlertDialog(
+              title: const Text('Update Data', style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'Bebas',
+                letterSpacing: 2.0,
+              ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    initialValue: oldUserName,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Name',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldUserName = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldPhoneNumber,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Phone Number',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldPhoneNumber = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldItemPrice,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Item Price',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldItemPrice = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldItemName,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Your Item Name',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldItemName = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldItemColor,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter Item Color',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldItemColor = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                  TextFormField(
+                    initialValue: oldItemDescription,
+                    decoration: const InputDecoration(
+                      hintText: 'Write  Description',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        oldItemDescription = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 5.0,),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancel',
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed:()
+                    {
+                      Navigator.pop(context);
+                      updateProfileNameOnExistingPosts(oldUserName);
+                      _updateUserName(oldUserName, oldPhoneNumber);
 
-                ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      initialValue: oldUserName,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Your Name',
-                      ),
-                      onChanged: (value){
-                        setState((){
-                          oldUserName = value;
-                        });
-                      },
-                    ),
-                    SizedBox(height: 5.0,),
-                    TextFormField(
-                      initialValue: oldPhoneNumber,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter Your PhoneNumber',
-                      ),
-                      onChanged: (value){
-                        setState((){
-                          oldPhoneNumber = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              )
+                      FirebaseFirestore.instance
+                          .collection('item')
+                          .doc(selectDoc).update(
+                          {
+                            'userName': oldUserName,
+                            'userNumber': oldPhoneNumber,
+                            'userItem': oldItemPrice,
+                            'itemModel': oldItemName,
+                            'itemColor': oldItemColor,
+                            'itemdescription': oldItemDescription,
+                          }).catchError((onError)
+                      {
+                         print(onError);
+                      });
+
+                      Fluttertoast.showToast(
+                          msg: 'The Task has been uploaded',
+                      toastLength: Toast.LENGTH_LONG,
+                      backgroundColor: Colors.grey,
+                      fontSize: 18.0,
+                    );
+                   },
+                  child: const Text(
+                    'Update Now',
+                  ),
+                )
+              ],
+            ),
           );
         }
+
     );
   }
 
+  updateProfileNameOnExistingPosts(oldUserName) async
+  {
+    await FirebaseFirestore.instance.collection('items')
+          .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .get().then((snapshot)
+    {
+      for(int index = 0; index<snapshot.docs.length; index++)
+      {
+        String userProfileNameInPost = snapshot.docs[index]['userName'];
+
+        if(userProfileNameInPost != oldUserName)
+        {
+          FirebaseFirestore.instance.collection('item')
+              .doc(snapshot.docs[index].id)
+              .update(
+              {
+                'userName': oldUserName,
+              });
+        }
+      }
+    });
+  }
+
+  Future _updateUserName(oldUserName,oldPhoneNumber) async
+  {
+    await FirebaseFirestore.instance.collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(
+        {
+          'userName': oldUserName,
+          'userNumber': oldPhoneNumber,
+        });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +237,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
               tileMode: TileMode.clamp,
             )
         ),
-        padding: EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -110,7 +245,22 @@ class _ListViewWidgetState extends State<ListViewWidget> {
             GestureDetector(
               onDoubleTap: ()
               {
-                //For image slider screen
+               Navigator.pushReplacement(context,
+                   MaterialPageRoute(builder: (context) => ImageSliderScreen(
+                      title: widget.itemModel,
+                      itemColor: widget.itemColor,
+                      userNumber: widget.userNumber,
+                      description: widget.Description,
+                      lng: widget.lng,
+                      address: widget.address,
+                      itemPrice: widget.itemPrice,
+                      urlImage1: widget.img1,
+                      urlImage2: widget.img2,
+                      urlImage3: widget.img3,
+                      urlImage4: widget.img4,
+                      urlImage5: widget.img5,
+
+               )));
               },
               child: Image.network(
                 widget.img1,
@@ -156,13 +306,71 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                           color: Colors.white60,
                         ),
                       ),
-                      const SizedBox(height: 5.0,),
                     ],
                   ),
+                  widget.userId != uid
+                  ?
+                       const Padding(
+                        padding: EdgeInsets.only(right: 50.0),
+                        child: Column(),
+                      )
+                  :
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              onPressed:()
+                          {
+                            showDialogForUpdateData(
+                              widget.docId,
+                              widget.name,
+                              widget.userNumber,
+                              widget.itemPrice,
+                              widget.itemModel,
+                              widget.itemColor,
+                              widget.Description,
+
+
+                            );
+                          },
+                           icon: const Padding(
+                             padding: EdgeInsets.only(left: 20.0),
+                             child : Icon(
+                               Icons.edit_note,
+                               color: Colors.white,
+                               size: 27,
+                             ),
+                           ),
+                          ),
+                          IconButton(
+                              onPressed:()
+                              {
+                               FirebaseFirestore.instance.collection('items')
+                                   .doc(widget.postId)
+                                   .delete();
+
+
+                               Fluttertoast.showToast(
+                                   msg: 'Post Has Been Deleted',
+                                  toastLength: Toast.LENGTH_LONG,
+                                   backgroundColor: Colors.grey,
+                                   fontSize: 18.0,
+                                );
+                              },
+                            icon: const Padding(
+                              padding:  EdgeInsets.only(left: 20.0),
+                              child: Icon(
+                                Icons.delete_forever,
+                                size: 22,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                 ],
               ),
             ),
-
           ],
         ),
       ),
