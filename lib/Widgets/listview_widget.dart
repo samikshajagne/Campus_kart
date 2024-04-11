@@ -1,4 +1,3 @@
-
 import 'dart:js_interop_unsafe';
 
 import 'package:campus_cart/ImagesSliderScreen/ImageSliderScreen.dart';
@@ -37,7 +36,7 @@ class ListViewWidget extends StatefulWidget {
     required this.address,
     required this.userNumber,
 
-});
+  });
   @override
   State<ListViewWidget> createState() => _ListViewWidgetState();
 }
@@ -145,34 +144,34 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                   ),
                 ),
                 ElevatedButton(
-                    onPressed:()
+                  onPressed:()
+                  {
+                    Navigator.pop(context);
+                    updateProfileNameOnExistingPosts(oldUserName);
+                    _updateUserName(oldUserName, oldPhoneNumber);
+
+                    FirebaseFirestore.instance
+                        .collection('item')
+                        .doc(selectDoc).update(
+                        {
+                          'userName': oldUserName,
+                          'userNumber': oldPhoneNumber,
+                          'userItem': oldItemPrice,
+                          'itemModel': oldItemName,
+                          'itemColor': oldItemColor,
+                          'itemdescription': oldItemDescription,
+                        }).catchError((onError)
                     {
-                      Navigator.pop(context);
-                      updateProfileNameOnExistingPosts(oldUserName);
-                      _updateUserName(oldUserName, oldPhoneNumber);
+                      print(onError);
+                    });
 
-                      FirebaseFirestore.instance
-                          .collection('item')
-                          .doc(selectDoc).update(
-                          {
-                            'userName': oldUserName,
-                            'userNumber': oldPhoneNumber,
-                            'userItem': oldItemPrice,
-                            'itemModel': oldItemName,
-                            'itemColor': oldItemColor,
-                            'itemdescription': oldItemDescription,
-                          }).catchError((onError)
-                      {
-                         print(onError);
-                      });
-
-                      Fluttertoast.showToast(
-                          msg: 'The Task has been uploaded',
+                    Fluttertoast.showToast(
+                      msg: 'The Task has been uploaded',
                       toastLength: Toast.LENGTH_LONG,
                       backgroundColor: Colors.grey,
                       fontSize: 18.0,
                     );
-                   },
+                  },
                   child: const Text(
                     'Update Now',
                   ),
@@ -188,8 +187,8 @@ class _ListViewWidgetState extends State<ListViewWidget> {
   updateProfileNameOnExistingPosts(oldUserName) async
   {
     await FirebaseFirestore.instance.collection('items')
-          .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .get().then((snapshot)
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get().then((snapshot)
     {
       for(int index = 0; index<snapshot.docs.length; index++)
       {
@@ -224,102 +223,102 @@ class _ListViewWidgetState extends State<ListViewWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-    child: Card(
-      elevation: 16.0,
-      shadowColor: Colors.white10,
-      child: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.orangeAccent, Colors.pinkAccent],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              stops: [0.0,1.0],
-              tileMode: TileMode.clamp,
-            )
-        ),
-        padding: const EdgeInsets.all(5.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onDoubleTap: ()
-              {
-               Navigator.pushReplacement(context,
-                   MaterialPageRoute(builder: (context) => ImageSliderScreen(
-                      title: widget.itemModel,
-                      itemColor: widget.itemColor,
-                      userNumber: widget.userNumber,
-                      description: widget.Description,
-                      lng: widget.lng,
-                      address: widget.address,
-                      itemPrice: widget.itemPrice,
-                      urlImage1: widget.img1,
-                      urlImage2: widget.img2,
-                      urlImage3: widget.img3,
-                      urlImage4: widget.img4,
-                      urlImage5: widget.img5,
+      child: Card(
+        elevation: 16.0,
+        shadowColor: Colors.white10,
+        child: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.orangeAccent, Colors.pinkAccent],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.0,1.0],
+                tileMode: TileMode.clamp,
+              )
+          ),
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //GestureDetector(
+                onDoubleTap: ()
+                {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => ImageSliderScreen(
+                        title: widget.itemModel,
+                        itemColor: widget.itemColor,
+                        userNumber: widget.userNumber,
+                        itemdescription: widget.itemDescription,
+                        lng: widget.lng,
+                        address: widget.address,
+                        itemPrice: widget.itemPrice,
+                        urlImage1: widget.img1,
+                        urlImage2: widget.img2,
+                        urlImage3: widget.img3,
+                        urlImage4: widget.img4,
+                        urlImage5: widget.img5,
 
-               )));
-              },
-              child: Image.network(
-                widget.img1,
-                fit: BoxFit.cover,
+                      )));
+                },
+                child: Image.network(
+                  widget.img1,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-           const SizedBox(height:8.0),
-            Padding(
-              padding: const EdgeInsets.only(left : 8.0,right: 8.0,bottom: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                      widget.userImg,
+              const SizedBox(height:8.0),
+              Padding(
+                padding: const EdgeInsets.only(left : 8.0,right: 8.0,bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                        widget.userImg,
+                      ),
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5.0,),
-                      Text(
-                        widget.itemModel,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white60,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 5.0,),
+                        Text(
+                          widget.itemModel,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white60,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5.0,),
-                      Text(
-                        DateFormat('dd MMM, YYYY - hh :mm a').format(widget.date).toString(),
-                        style:const TextStyle(
-                          color: Colors.white60,
+                        const SizedBox(height: 5.0,),
+                        Text(
+                          DateFormat('dd MMM, YYYY - hh :mm a').format(widget.date).toString(),
+                          style:const TextStyle(
+                            color: Colors.white60,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  widget.userId != uid
-                  ?
-                       const Padding(
-                        padding: EdgeInsets.only(right: 50.0),
-                        child: Column(),
-                      )
-                  :
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed:()
+                      ],
+                    ),
+                    widget.userId != uid
+                        ?
+                    const Padding(
+                      padding: EdgeInsets.only(right: 50.0),
+                      child: Column(),
+                    )
+                        :
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed:()
                           {
                             showDialogForUpdateData(
                               widget.docId,
@@ -328,53 +327,53 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                               widget.itemPrice,
                               widget.itemModel,
                               widget.itemColor,
-                              widget.Description,
+                              widget.itemDescription,
 
 
                             );
                           },
-                           icon: const Padding(
-                             padding: EdgeInsets.only(left: 20.0),
-                             child : Icon(
-                               Icons.edit_note,
-                               color: Colors.white,
-                               size: 27,
-                             ),
-                           ),
-                          ),
-                          IconButton(
-                              onPressed:()
-                              {
-                               FirebaseFirestore.instance.collection('items')
-                                   .doc(widget.postId)
-                                   .delete();
-
-
-                               Fluttertoast.showToast(
-                                   msg: 'Post Has Been Deleted',
-                                  toastLength: Toast.LENGTH_LONG,
-                                   backgroundColor: Colors.grey,
-                                   fontSize: 18.0,
-                                );
-                              },
-                            icon: const Padding(
-                              padding:  EdgeInsets.only(left: 20.0),
-                              child: Icon(
-                                Icons.delete_forever,
-                                size: 22,
-                                color: Colors.white,
-                              ),
+                          icon: const Padding(
+                            padding: EdgeInsets.only(left: 20.0),
+                            child : Icon(
+                              Icons.edit_note,
+                              color: Colors.white,
+                              size: 27,
                             ),
-                          )
-                        ],
-                      ),
-                ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed:()
+                          {
+                            FirebaseFirestore.instance.collection('items')
+                                .doc(widget.postId)
+                                .delete();
+
+
+                            Fluttertoast.showToast(
+                              msg: 'Post Has Been Deleted',
+                              toastLength: Toast.LENGTH_LONG,
+                              backgroundColor: Colors.grey,
+                              fontSize: 18.0,
+                            );
+                          },
+                          icon: const Padding(
+                            padding:  EdgeInsets.only(left: 20.0),
+                            child: Icon(
+                              Icons.delete_forever,
+                              size: 22,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

@@ -33,7 +33,6 @@ class _SignUpBodyState extends State<SignUpBody> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   void _getfromcamera() async {
     XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     _cropimage(pickedFile?.path);

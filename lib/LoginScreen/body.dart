@@ -11,6 +11,7 @@ import 'package:campus_cart/Widgets/rounded_password_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+
 class LoginBody extends StatefulWidget {
   @override
   State<LoginBody> createState() => _LoginBodyState();
@@ -47,7 +48,9 @@ class _LoginBodyState extends State<LoginBody> {
       {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
       }
-    else print('error');
+    else {
+      print('error');
+    }
   }
   @override
   Widget build(BuildContext context) {

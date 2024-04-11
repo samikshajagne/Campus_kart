@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:campus_cart/Homescreen/home_screen.dart';
+import 'package:campus_cart/Homescreen/home_screen.dart';
 import 'package:campus_cart/WelcomeScreen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import '../Homescreen/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
 
