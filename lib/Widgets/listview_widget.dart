@@ -241,7 +241,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //GestureDetector(
+              GestureDetector(
                 onDoubleTap: ()
                 {
                   Navigator.pushReplacement(context,
@@ -250,6 +250,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                         itemColor: widget.itemColor,
                         userNumber: widget.userNumber,
                         itemdescription: widget.itemDescription,
+                        lat: widget.lat,
                         lng: widget.lng,
                         address: widget.address,
                         itemPrice: widget.itemPrice,
