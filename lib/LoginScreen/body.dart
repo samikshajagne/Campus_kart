@@ -46,7 +46,7 @@ class _LoginBodyState extends State<LoginBody> {
 
     if(currentUser != null)
       {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
       }
     else {
       print('error');

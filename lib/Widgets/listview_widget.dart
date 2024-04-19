@@ -1,4 +1,3 @@
-import 'dart:js_interop_unsafe';
 
 import 'package:campus_cart/ImagesSliderScreen/ImageSliderScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
