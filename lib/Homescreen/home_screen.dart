@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
 import '../ProfileScreen/profile_screen.dart';
 import '../SearchProduct/search_product.dart';
 import '../UploadAdScreen/upload_ad_screen.dart';
+import '../WelcomeScreen/welcome_screen.dart';
 import '../Widgets/GlobalVariable.dart';
 import '../Widgets/listview_widget.dart';
-import '../chatscreen/chatscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getUserAddress() async {
     Position newPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
     position = newPosition;
     placemarks = await placemarkFromCoordinates(position!.latitude, position!.longitude);
     Placemark placemark = placemarks![0];
@@ -74,7 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen(
+                      sellerId: uid,
+                    )));
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -83,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchProduct()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SearchProduct()));
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -93,12 +96,12 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () {
                 _auth.signOut().then((value) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => chatscreen()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
                 });
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Icon(Icons.chat_bubble_rounded, color: Colors.black, size: 25),
+                child: Icon(Icons.logout, color: Colors.black, size: 25),
               ),
             ),
           ],
@@ -125,66 +128,52 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('items').orderBy('time', descending: true).snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot)
+          {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            else if (snapshot.connectionState == ConnectionState.active)
-            {
-              if (snapshot.data!.docs.isNotEmpty)
-              {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.data!.docs.isNotEmpty) {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (BuildContext context, int index)
-                  {
+                  itemBuilder: (BuildContext context, int index) {
+                    var doc = snapshot.data!.docs[index];
+                    var docData = doc.data() as Map<String, dynamic>;
                     return ListViewWidget(
-
-                      docId: snapshot.data!.docs[index].id,
-                      itemColor: snapshot.data!.docs[index]['itemColor'],
-                      img1: snapshot.data!.docs[index]['urlImage1'],
-                      img2: snapshot.data!.docs[index]['urlImage2'],
-                      img3: snapshot.data!.docs[index]['urlImage3'],
-                      img4: snapshot.data!.docs[index]['urlImage4'],
-                      img5: snapshot.data!.docs[index]['urlImage5'],
-                      userImg: snapshot.data!.docs[index]['imgPro'],
-                      name: snapshot.data!.docs[index]['username'],
-                      date: snapshot.data!.docs[index]['time'],
-                      userId: snapshot.data!.docs[index]['id'],
-                      address :snapshot.data!.docs[index]['address'],
-                      itemDescription :snapshot.data!.docs[index]['itemdescription'],
-                      itemModel :snapshot.data!.docs[index]['itemModel'],
-                      itemPrice :snapshot.data!.docs[index]['itemPrice'],
-                      lat : snapshot.data!.docs[index]['lat'],
-                      lng :snapshot.data!.docs[index]['lng'],
-                      postId :snapshot.data!.docs[index]['postId'],
-                      userNumber :snapshot.data!.docs[index]['userNumber'],
-
+                      docId: doc.id,
+                      itemColor: docData['itemColor'] ?? '',
+                      // Handle missing 'imgPro' field
+                      userImg: docData['imgPro'] ?? '',
+                      name: docData['username'] ?? '',
+                      // Convert 'time' from Timestamp to DateTime
+                      date: docData['time'].toDate(),
+                      userId: docData['id'] ?? '',
+                      address: docData['address'] ?? '',
+                      itemDescription: docData['itemDescription'] ?? '',
+                      itemModel: docData['itemModel'] ?? '',
+                      itemPrice: docData['itemPrice'] ?? '',
+                      lat: docData['lat'] ?? 0.0,
+                      lng: docData['lng'] ?? 0.0,
+                      postId: docData['postId'] ?? '',
+                      userNumber: docData['userNumber'] ?? '',
                     );
                   },
                 );
+              } else {
+                return Center(child: Text("No items available"));
               }
-              else
-              {
-                return const Center(
-                    child: Text("there is no task"),
-                );
-              }
+            } else {
+              return Center(child: Text("Connection state: ${snapshot.connectionState}"));
             }
-            return const Center(
-            child: Text(
-            'Something Went Wrong',
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),
-            ),
-            );
           },
         ),
         floatingActionButton: FloatingActionButton(
           tooltip: 'Add Post',
           backgroundColor: Colors.black54,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => UploadAdScreen()));
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UploadAdScreen()));
           },
-          child: const Icon(Icons.add),
+          child: const Icon(Icons.cloud_upload),
         ),
       ),
     );

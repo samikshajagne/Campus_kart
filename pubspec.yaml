@@ -51,6 +51,7 @@ dependencies:
   url_launcher: ^6.2.5
   map_launcher: ^3.2.0
   uuid: ^4.3.3
+  cloudinary_public: ^0.23.1
 
 dev_dependencies:
   flutter_test:

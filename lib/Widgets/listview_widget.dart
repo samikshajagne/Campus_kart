@@ -1,5 +1,4 @@
 
-import 'package:campus_cart/ImagesSliderScreen/ImageSliderScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,19 +8,20 @@ import 'package:intl/intl.dart';
 import 'GlobalVariable.dart';
 
 class ListViewWidget extends StatefulWidget {
-  String docId, itemColor, img1, img2, img3, img4, img5,userImg, name , userId, itemModel, postId;
+  String docId,
+      itemColor,
+      userImg,
+      name,
+      userId,
+      itemModel,
+      postId;
   String itemPrice, itemDescription, address, userNumber;
   DateTime date;
-  double lat,lng;
+  double lat, lng;
 
   ListViewWidget({
     required this.docId,
     required this.itemColor,
-    required this.img1,
-    required this.img2,
-    required this.img3,
-    required this.img4,
-    required this.img5,
     required this.userImg,
     required this.name,
     required this.date,
@@ -34,27 +34,35 @@ class ListViewWidget extends StatefulWidget {
     required this.lng,
     required this.address,
     required this.userNumber,
-
   });
+
   @override
   State<ListViewWidget> createState() => _ListViewWidgetState();
 }
 
 class _ListViewWidgetState extends State<ListViewWidget> {
-
-  Future<Future> showDialogForUpdateData(selectDoc, oldUserName, oldPhoneNumber, oldItemPrice, oldItemName, oldItemColor , oldItemDescription) async
-  {
-    return showDialog(context: context,
+  Future<Future> showDialogForUpdateData(
+      selectDoc,
+      oldUserName,
+      oldPhoneNumber,
+      oldItemPrice,
+      oldItemName,
+      oldItemColor,
+      oldItemDescription,
+      ) async {
+    return showDialog(
+        context: context,
         barrierDismissible: false,
-        builder: (BuildContext context)
-        {
+        builder: (BuildContext context) {
           return SingleChildScrollView(
             child: AlertDialog(
-              title: const Text('Update Data', style: TextStyle(
-                fontSize: 24,
-                fontFamily: 'Bebas',
-                letterSpacing: 2.0,
-              ),
+              title: const Text(
+                'Update Data',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Bebas',
+                  letterSpacing: 2.0,
+                ),
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -70,7 +78,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                   TextFormField(
                     initialValue: oldPhoneNumber,
                     decoration: const InputDecoration(
@@ -82,7 +90,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                   TextFormField(
                     initialValue: oldItemPrice,
                     decoration: const InputDecoration(
@@ -94,7 +102,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                   TextFormField(
                     initialValue: oldItemName,
                     decoration: const InputDecoration(
@@ -106,7 +114,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                   TextFormField(
                     initialValue: oldItemColor,
                     decoration: const InputDecoration(
@@ -118,11 +126,11 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                   TextFormField(
                     initialValue: oldItemDescription,
                     decoration: const InputDecoration(
-                      hintText: 'Write  Description',
+                      hintText: 'Write Description',
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -130,7 +138,7 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                       });
                     },
                   ),
-                  const SizedBox(height: 5.0,),
+                  const SizedBox(height: 5.0),
                 ],
               ),
               actions: [
@@ -143,24 +151,22 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed:()
-                  {
+                  onPressed: () {
                     Navigator.pop(context);
                     updateProfileNameOnExistingPosts(oldUserName);
                     _updateUserName(oldUserName, oldPhoneNumber);
 
                     FirebaseFirestore.instance
                         .collection('item')
-                        .doc(selectDoc).update(
-                        {
-                          'userName': oldUserName,
-                          'userNumber': oldPhoneNumber,
-                          'userItem': oldItemPrice,
-                          'itemModel': oldItemName,
-                          'itemColor': oldItemColor,
-                          'itemdescription': oldItemDescription,
-                        }).catchError((onError)
-                    {
+                        .doc(selectDoc)
+                        .update({
+                      'userName': oldUserName,
+                      'userNumber': oldPhoneNumber,
+                      'userItem': oldItemPrice,
+                      'itemModel': oldItemName,
+                      'itemColor': oldItemColor,
+                      'itemdescription': oldItemDescription,
+                    }).catchError((onError) {
                       print(onError);
                     });
 
@@ -174,48 +180,42 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                   child: const Text(
                     'Update Now',
                   ),
-                )
+                ),
               ],
             ),
           );
-        }
-
-    );
+        });
   }
 
-  updateProfileNameOnExistingPosts(oldUserName) async
-  {
-    await FirebaseFirestore.instance.collection('items')
+  updateProfileNameOnExistingPosts(oldUserName) async {
+    await FirebaseFirestore.instance
+        .collection('items')
         .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .get().then((snapshot)
-    {
-      for(int index = 0; index<snapshot.docs.length; index++)
-      {
+        .get()
+        .then((snapshot) {
+      for (int index = 0; index < snapshot.docs.length; index++) {
         String userProfileNameInPost = snapshot.docs[index]['userName'];
 
-        if(userProfileNameInPost != oldUserName)
-        {
-          FirebaseFirestore.instance.collection('item')
+        if (userProfileNameInPost != oldUserName) {
+          FirebaseFirestore.instance
+              .collection('item')
               .doc(snapshot.docs[index].id)
-              .update(
-              {
-                'userName': oldUserName,
-              });
+              .update({
+            'userName': oldUserName,
+          });
         }
       }
     });
   }
 
-  Future _updateUserName(oldUserName,oldPhoneNumber) async
-  {
-    await FirebaseFirestore.instance.collection('users')
+  Future _updateUserName(oldUserName, oldPhoneNumber) async {
+    await FirebaseFirestore.instance
+        .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update(
-        {
-          'userName': oldUserName,
-          'userNumber': oldPhoneNumber,
-        });
-
+        .update({
+      'userName': oldUserName,
+      'userNumber': oldPhoneNumber,
+    });
   }
 
   @override
@@ -231,44 +231,17 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                 colors: [Colors.orangeAccent, Colors.pinkAccent],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                stops: [0.0,1.0],
+                stops: [0.0, 1.0],
                 tileMode: TileMode.clamp,
-              )
-          ),
+              )),
           padding: const EdgeInsets.all(5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GestureDetector(
-                onDoubleTap: ()
-                {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => ImageSliderScreen(
-                        title: widget.itemModel,
-                        itemColor: widget.itemColor,
-                        userNumber: widget.userNumber,
-                        itemdescription: widget.itemDescription,
-                        lat: widget.lat,
-                        lng: widget.lng,
-                        address: widget.address,
-                        itemPrice: widget.itemPrice,
-                        urlImage1: widget.img1,
-                        urlImage2: widget.img2,
-                        urlImage3: widget.img3,
-                        urlImage4: widget.img4,
-                        urlImage5: widget.img5,
-
-                      )));
-                },
-                child: Image.network(
-                  widget.img1,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height:8.0),
               Padding(
-                padding: const EdgeInsets.only(left : 8.0,right: 8.0,bottom: 8.0),
+                padding:
+                const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -289,7 +262,9 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 5.0,),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
                         Text(
                           widget.itemModel,
                           style: const TextStyle(
@@ -298,28 +273,29 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 5.0,),
+                        const SizedBox(
+                          height: 5.0,
+                        ),
                         Text(
-                          DateFormat('dd MMM, YYYY - hh :mm a').format(widget.date).toString(),
-                          style:const TextStyle(
+                          DateFormat('dd MMM, YYYY - hh:mm a')
+                              .format(widget.date)
+                              .toString(),
+                          style: const TextStyle(
                             color: Colors.white60,
                           ),
                         ),
                       ],
                     ),
                     widget.userId != uid
-                        ?
-                    const Padding(
+                        ? const Padding(
                       padding: EdgeInsets.only(right: 50.0),
                       child: Column(),
                     )
-                        :
-                    Column(
+                        : Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed:()
-                          {
+                          onPressed: () {
                             showDialogForUpdateData(
                               widget.docId,
                               widget.name,
@@ -328,13 +304,11 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                               widget.itemModel,
                               widget.itemColor,
                               widget.itemDescription,
-
-
                             );
                           },
                           icon: const Padding(
                             padding: EdgeInsets.only(left: 20.0),
-                            child : Icon(
+                            child: Icon(
                               Icons.edit_note,
                               color: Colors.white,
                               size: 27,
@@ -342,12 +316,11 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                           ),
                         ),
                         IconButton(
-                          onPressed:()
-                          {
-                            FirebaseFirestore.instance.collection('items')
+                          onPressed: () {
+                            FirebaseFirestore.instance
+                                .collection('items')
                                 .doc(widget.postId)
                                 .delete();
-
 
                             Fluttertoast.showToast(
                               msg: 'Post Has Been Deleted',
@@ -357,14 +330,14 @@ class _ListViewWidgetState extends State<ListViewWidget> {
                             );
                           },
                           icon: const Padding(
-                            padding:  EdgeInsets.only(left: 20.0),
+                            padding: EdgeInsets.only(left: 20.0),
                             child: Icon(
                               Icons.delete_forever,
                               size: 22,
                               color: Colors.white,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],

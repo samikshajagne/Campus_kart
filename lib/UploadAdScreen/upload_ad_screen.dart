@@ -1,13 +1,7 @@
-import 'dart:io';
-
-import 'package:campus_cart/DialogBox/login_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
 import 'package:uuid/uuid.dart';
 
 import '../Homescreen/home_screen.dart';
@@ -20,9 +14,7 @@ class UploadAdScreen extends StatefulWidget {
 
 class _UploadAdScreenState extends State<UploadAdScreen> {
   String postId = Uuid().v4();
-  bool uploading = false, next = false;
-  final List<File> _image = [];
-  List<String> urlsList = [];
+  bool next = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name = '';
   String phoneNo = '';
@@ -31,32 +23,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
   String itemModel = '';
   String itemColor = '';
   String itemDescription = '';
-
-  chooseImage() async {
-    final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image.add(File(pickedFile.path));
-      });
-    }
-  }
-
-  Future<void> uploadFile() async {
-    try {
-      for (var img in _image) {
-        final ref =
-        FirebaseStorage.instance.ref().child('images/${Path.basename(img.path)}');
-        final uploadTask = ref.putFile(img);
-        final storageTaskSnapshot = await uploadTask;
-
-        final downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-        urlsList.add(downloadUrl);
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   getNameOfUser() {
     FirebaseFirestore.instance.collection('users').doc(uid).get().then(
@@ -87,7 +53,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
       'itemModel': itemModel,
       'itemColor': itemColor,
       'itemDescription': itemDescription,
-      'imageUrls': urlsList,
       'lat': position!.latitude,
       'lng': position!.longitude,
       'address': completeAddress,
@@ -137,44 +102,16 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
               ),
             ),
           ),
-          title: Text(
-            next ? 'Please write Item Info' : 'Choose Item Images',
-            style: const TextStyle(
+          title: const Text(
+            'Please write Item Info',
+            style: TextStyle(
               color: Colors.black54,
               fontFamily: 'Signatra',
               fontSize: 35,
             ),
           ),
-          actions: [
-            next
-                ? Container()
-                : ElevatedButton(
-              onPressed: () {
-                if (_image.length == 5) {
-                  setState(() {
-                    uploading = true;
-                    next = true;
-                  });
-                } else {
-                  Fluttertoast.showToast(
-                    msg: 'Please Select 5 images only..',
-                    gravity: ToastGravity.CENTER,
-                  );
-                }
-              },
-              child: const Text(
-                'Next',
-                style: TextStyle(
-                  fontSize: 19,
-                  color: Colors.black54,
-                  fontFamily: 'Varela',
-                ),
-              ),
-            ),
-          ],
         ),
-        body: next
-            ? SingleChildScrollView(
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(30),
             child: Column(
@@ -220,19 +157,7 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.5,
                   child: ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return LoadingAlertDialog(
-                            message: 'Uploading....',
-                          );
-                        },
-                      );
-                      uploadFile().then((_) {
-                        addDataToFirestore();
-                      });
-                    },
+                    onPressed: addDataToFirestore,
                     child: const Text(
                       'upload',
                       style: TextStyle(
@@ -244,60 +169,6 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
               ],
             ),
           ),
-        )
-            : Stack(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              child: GridView.builder(
-                itemCount: _image.length + 1,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemBuilder: (context, index) {
-                  return index == 0
-                      ? Center(
-                    child: IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        !uploading ? chooseImage() : null;
-                      },
-                    ),
-                  )
-                      : Container(
-                    margin: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(_image[index - 1]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            uploading
-                ? const Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'uploading...',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(height: 10),
-                  CircularProgressIndicator(
-                    value: 0.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            )
-                : Container(),
-          ],
         ),
       ),
     );
