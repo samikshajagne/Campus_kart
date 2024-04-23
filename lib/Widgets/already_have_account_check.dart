@@ -8,7 +8,7 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
   AlreadyHaveAnAccountCheck({
     this.login = true,
     required this.press,
-});
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,8 @@ class AlreadyHaveAnAccountCheck extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Text(
-            login ?  '  Sign Up' : '  Sign In',
-            style: const TextStyle(
+            login ?  'Sign Up. ' : 'Sign In. ',
+            style: TextStyle(
               color: Colors.black,
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.bold,

@@ -10,13 +10,7 @@ class LoginBackground extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.orangeAccent, Colors.pinkAccent],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          stops: [0.0,1.0],
-          tileMode: TileMode.clamp,
-        )
+       color: Colors.white
       ),
       height: size.height,
       width: double.infinity,
@@ -24,17 +18,10 @@ class LoginBackground extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Positioned(
-            top: 0,
-            left: 0,
-            child: Image.asset('assets/images/main_top.png',
-            color: Colors.deepPurple.shade300,
-            width: size.width * 0.3,),
-          ),
-          Positioned(
             bottom: 0,
             left: 0,
             child: Image.asset('assets/images/main_bottom.png',
-              color: Colors.deepPurple.shade300,
+              color: Colors.redAccent,
               width: size.width * 0.2,),
           ),
           child,

@@ -102,6 +102,13 @@ class _UploadAdScreenState extends State<UploadAdScreen> {
               ),
             ),
           ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+            },
+
+            ),
           title: const Text(
             'Please write Item Info',
             style: TextStyle(

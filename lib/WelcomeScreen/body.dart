@@ -15,19 +15,28 @@ class WelcomeBody extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 100),
             Text(
               'Campus kart',
               style: TextStyle(
-                fontSize:60.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54,
+                fontSize:80.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.red.shade900,
                 fontFamily: 'Signatra'
               ),
             ),
-            SizedBox(height: size.height * 0.05,),
-            Image.asset('assets/icons/chat.png',
+            Text("Sell, Purchase or Exchange within the\n                 Campus of VCET",
+            style: TextStyle(
+              fontSize: 17.0,
+               fontFamily:'Verela',
+              color: Colors.black,
+              fontWeight: FontWeight.normal
+            ),),
+            Image.asset('assets/images/campus.jpg',
             height: size.height * 0.40,),
+            SizedBox(height: size.height * 0.01,),
             RoundedButton(
+              color: Colors.black54,
               text: 'Login',
               press: () {
                   Navigator.pushReplacement(context,

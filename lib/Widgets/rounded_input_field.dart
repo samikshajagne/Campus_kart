@@ -9,7 +9,7 @@ class RoundedInputField extends StatelessWidget {
   RoundedInputField({
     required this.hintText,
     required this.icon, // Changed from iconData to IconData
-    required this.onChanged,
+    required this.onChanged, required Color backgroundColor, required Color shadowColor, required MaterialColor border,
   });
 
   @override

@@ -8,8 +8,9 @@ class RoundedButton extends StatelessWidget {
   RoundedButton({
     required this.text,
     required this.press,
-    this.color = Colors.black54,
+    this.color = Colors.red,
     this.textColor = Colors.white,
+
   });
 
   @override

@@ -1,3 +1,4 @@
+import 'package:campus_cart/chatscreen/chatscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   getMyData() {
@@ -59,13 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.orangeAccent, Colors.pinkAccent],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          stops: [0.0, 1.0],
-          tileMode: TileMode.clamp,
-        ),
+        color: Colors.white
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -81,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Icon(Icons.person, color: Colors.black),
+                child: Icon(Icons.person, color: Colors.white),
               ),
             ),
             TextButton(
@@ -90,18 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Icon(Icons.search, color: Colors.black),
+                child: Icon(Icons.search, color: Colors.white),
               ),
             ),
             TextButton(
               onPressed: () {
-                _auth.signOut().then((value) {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
-                });
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => chatscreen()));
               },
               child: const Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Icon(Icons.logout, color: Colors.black, size: 25),
+                child: Icon(Icons.chat_bubble_rounded, color: Colors.white),
               ),
             ),
           ],
@@ -116,15 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: false,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.orangeAccent, Colors.pinkAccent],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
+
             ),
           ),
+          backgroundColor: Colors.red.shade900
+          ,
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('items').orderBy('time', descending: true).snapshots(),
@@ -135,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
             } else if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.data!.docs.isNotEmpty) {
                 return ListView.builder(
+
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (BuildContext context, int index) {
                     var doc = snapshot.data!.docs[index];

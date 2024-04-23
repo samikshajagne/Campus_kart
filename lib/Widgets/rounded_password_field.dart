@@ -6,7 +6,7 @@ class RoundedPasswordField extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
   RoundedPasswordField({
-    required this.onChanged,
+    required this.onChanged, required Color backgroundColor, required Color shadowColor, required border,
 });
 
   @override

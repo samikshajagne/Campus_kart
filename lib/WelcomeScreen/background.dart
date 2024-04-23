@@ -11,14 +11,7 @@ class WelcomeBackground extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors:[Colors.orangeAccent, Colors.pinkAccent],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          stops: [0.0,1.0],
-          tileMode: TileMode.clamp
 
-        )
       ),
       width: double.infinity,
       height: size.height,
@@ -26,23 +19,24 @@ class WelcomeBackground extends StatelessWidget {
       alignment: Alignment.center,
         children: [
           Positioned(
-              top: 0,
-              left:0,
-              child: Image.asset('assets/images/main_top.png',
-              color: Colors.deepPurple.shade300,
+            top: 0,
+            left:0,
+            child: Image.asset('assets/images/main_top.png',
+              color: Colors.orangeAccent,
               width: size.width *0.3,
-              ),
+            ),
           ),
           Positioned(
             bottom: 0,
             left: 0,
-            child: Image.asset('assets/images/main_bottom.png',
-              color: Colors.deepPurple.shade300,
-              width: size.width * 0.2,
+            child: Container(
+              width: size.width,
+              height: size.height * 0.25, // Adjust this height as needed
+              color: Colors.deepOrangeAccent[100],
             ),
-
           ),
-          child,
+
+      child,
         ],
 
       ),

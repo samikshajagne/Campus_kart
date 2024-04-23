@@ -52,13 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Material(
       child: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.orangeAccent, Colors.pinkAccent],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            stops: [0.0, 1.0],
-            tileMode: TileMode.clamp,
-          ),
+         color: Colors.white
         ),
         child: Center(
           child: Column(
@@ -66,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset('assets/images/04.png', width: 200, height: 200),
+                child: Image.asset('assets/icons/shop.png', width: 200, height: 200),
               ),
               const SizedBox(height: 20.0),
               const Text(
@@ -74,9 +68,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w200,
                   fontFamily: 'Varela',
+                  fontStyle: FontStyle.italic
                 ),
               ),
             ],
